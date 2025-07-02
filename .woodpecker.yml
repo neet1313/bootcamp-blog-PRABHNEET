@@ -1,0 +1,5 @@
+steps:
+  - name: build
+    image: node:latest
+    commands:
+      - echo "Hello from Woodpecker!"
