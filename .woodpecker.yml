@@ -2,4 +2,4 @@ steps:
   - name: build
     image: node:latest
     commands:
-      - echo "Hello from Woodpecker!"
+      - echo "Welcome to Woodpecker!"
