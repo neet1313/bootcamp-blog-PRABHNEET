@@ -1,5 +1,24 @@
+# .woodpecker.yml
+
 steps:
-  - name: build
-    image: node:latest
+  setup:
+    image: cirrusci/flutter:3.16.7
     commands:
-      - echo "Hello from Woodpecker!"
+      - flutter --version
+      - flutter clean
+      - flutter pub get
+
+  build:
+    image: cirrusci/flutter:3.16.7
+    commands:
+      - flutter packages pub run build_runner clean
+      - flutter packages pub run build_runner build -d
+      - flutter pub run slang
+      - echo "version=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> version.env
+      - source version.env
+      - export TAG="v$version"
+      - |
+        if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+          flutter build appbundle --release --flavor freeproduction -t lib/main_prod.dart
+        elif [ "$CI_COMMIT_BRANCH" = "staging" ]; then
+          flutter build appbu
